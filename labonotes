@@ -1,0 +1,221 @@
+# Labo 2
+
+## Warming up: Solderen
+
+Iedereen soldeert een header op de BMP280
+
+## Installatie MicroPython
+
+MicroPython is een bootloader en programmeer-omgeving om een beperkte versie van Python te runnen op microcontrollers.
+
+MicroControllers zijn eigenlijk éénvoudige computers zonder besturingssysteem.
+
+Volg de installatie-instructies op https://docs.micropython.org/en/latest/esp32/tutorial/intro.html om MicroPython te installeren.
+
+Het gaat er neer komen dat je de 2 commando's runt:
+
+~~~
+esptool.py --port /dev/ttyUSB0 erase_flash
+esptool.py --chip esp32 --port /dev/ttyUSB0 write_flash -z 0x1000 esp32-20180511-v1.9.4.bin
+~~~
+
+Je vervangt echter /dev/ttyUSB0 door de echte poortnaam (op Windows is dit een COMX-poort).
+In Windows 10 moet je naar de device-manager gaan kijken om deze te vinden.
+
+## Installeer Putty
+
+Om over deze seriele poort gemakkelijk te kunnen praten installeren we Putty.  
+Dit werkt over eender welk OS.
+Als je echter liever een andere seriele tool gebruikt is dat geen probleem.    
+
+## Connecteer je bord en test de REPL
+
+Connecteer met Putty met baudrate 115200.  
+Schrijf binnen de REPL een loopje binnen MicroPython dat tot 10 telt...
+
+## Github
+
+We gaan deze oefening documenteren in Github.  
+We gaan een README.md aanmaken en daar onze documentatie volgen.
+
+### Github configureren
+
+* Ga naar github.com
+    * Maak een github-account aan
+    * Maak een lege repository aan, noem deze IoTInPractice1
+ 
+* Maak ssh-keys aan
+    * Voor Windows volg tutorial op https://phoenixnap.com/kb/generate-ssh-key-windows-10
+    * Voor Linux en Mac
+~~~
+ssh-keygen -t rsa
+cat ~/.ssh/id_rsa
+~~~
+
+### Keys configureren in github
+
+* Copieer deze naar github
+    * Click rechtsboven op "Your profile"
+    * Ga naar "Settings/SSH and GPG Keys"
+    * New ssh-key
+    * Geef titel en copier de publieke key
+
+### Markdown leren
+
+...Uitleg lector...
+
+### Projectje aanmaken
+
+~~~
+git init
+git add README.md
+git commit -m "Creating a first readme"
+git remote add origin ...
+git push origin master
+~~~
+
+## Oefening Ledje blinken
+
+Connecteer led 2 een led in serie met een weerstand tussen 200 en 400 ohm  
+Gebruik hiervoor https://docs.micropython.org/en/latest/esp8266/tutorial/pins.html
+
+Speel met volgende code:
+
+~~~
+>>> import machine
+>>> led = machine.Pin(2, machine.Pin.OUT)
+>>> led.value(1)
+>>> led.value(0)
+~~~
+
+Uit de context zou moeten blijken wat beide acties doen.  
+De functie time.sleep zorgt ervoor dat je code een gegeven aantal seconden wacht.  
+Kan je dit gebruiken om een blinking led te maken?
+
+~~~
+>>> import time
+>>> time.sleep(1)
+~~~
+
+## Oefening 3: blinking led in een file
+
+### Installatie Thommy
+
+
+
+
+
+-----------------------------------
+
+
+
+
+
+>>> import machine
+>>> bus = I2C(1, scl = machine.Pin(22), sda = machine.Pin(21))
+>>> from bmp280 import *
+>>> bmp = BMP280(bus)
+>>> bmp.temperature
+21.44
+
+---------------------------
+
+
+help("modules")
+
+
+------------------
+
+
+mqttClient.publish("test", json.dumps({"temperature" : str(bmp.temperature)}).encode())
+
+-----------------------------
+
+
+    mqttClient = MQTTClient(CLIENT_ID, MQTT_BROKER, keepalive=60)
+    mqttClient.set_callback(sub_cb)
+    mqttClient.connect()
+    mqttClient.subscribe(SUBSCRIBE_TOPIC)
+
+>>> mqttClient.publish("test","bqsfqsd".encode())
+
+mosquitto_sub -v -t 'test'
+
+sudo ufw allow 1883 
+Rules updated
+Rules updated (v6)
+$ sudo ufw enable
+
+-----------------------------
+
+import time
+time.time()
+
+https://github.com/dafvid/micropython-bmp280/blob/master/bmp280.py
+
+-----------------------
+
+ampy --port /dev/serial/by-id/usb-Silicon_Labs_CP2102_USB_to_UART_Bridge_Controller_0001-if00-port0 run ./test.py
+hello
+
+-------------------------
+
+
+https://randomnerdtutorials.com/getting-started-thonny-micropython-python-ide-esp32-esp8266/    
+
+
+
+
+Koppel een led-lampje en laat deze blinken
+Volg hiervoor
+
+
+--------------------------------------------
+
+Maak een WIFI-verbinding (password zie bord) 
+Gebruik hiervoor https://docs.micropython.org/en/latest/esp8266/tutorial/network_basics.html als gids...
+https://docs.micropython.org/en/latest/esp8266/tutorial/network_basics.html#configuration-of-the-wifi
+
+~~~
+>>> 
+>>> import network
+>>> sta_if = network.WLAN(network.STA_IF)
+>>> ap_if = network.WLAN(network.AP_IF)
+>>> ap_if.active()
+False
+>>> sta_if.active(True)
+True
+>>> sta_if.ifconfig()
+('0.0.0.0', '0.0.0.0', '0.0.0.0', '0.0.0.0')
+>>> sta_if.connect("bvnetwerk","xLbCMeZtac")
+E (847905) wifi:sta is connecting, return error
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+OSError: Wifi Internal Error
+>>> sta_if.isconnected()
+True
+>>> sta_if.active()
+True
+>>> sta_if.ifconfig()
+('10.20.226.104', '255.255.255.0', '10.20.226.204', '10.20.226.204')
+>>> 
+~~~
+
+~~~
+(base) bart@bvlegion:~/Data/Dropbox/Dropbox/Notas/2023/202303$ ping 10.20.226.104
+PING 10.20.226.104 (10.20.226.104) 56(84) bytes of data.
+64 bytes from 10.20.226.104: icmp_seq=1 ttl=255 time=193 ms
+64 bytes from 10.20.226.104: icmp_seq=2 ttl=255 time=301 ms
+64 bytes from 10.20.226.104: icmp_seq=3 ttl=255 time=325 ms
+64 bytes from 10.20.226.104: icmp_seq=4 ttl=255 time=247 ms
+64 bytes from 10.20.226.104: icmp_seq=5 ttl=255 time=221 ms
+64 bytes from 10.20.226.104: icmp_seq=6 ttl=255 time=294 ms
+64 bytes from 10.20.226.104: icmp_seq=7 ttl=255 time=321 ms
+64 bytes from 10.20.226.104: icmp_seq=8 ttl=255 time=240 ms
+^C
+--- 10.20.226.104 ping statistics ---
+8 packets transmitted, 8 received, 0% packet loss, time 7001ms
+rtt min/avg/max/mdev = 192.590/267.837/325.047/46.005 ms
+(base) bart@bvlegion:~/Data/Dropbox/Dropbox/Notas/2023/202303$ 
+
+~~~
